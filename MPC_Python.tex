@@ -1,0 +1,157 @@
+\include{preamble}
+
+\title{Commande prédictive avec Python.\\
+Application au pilotage optimal du chauffage d’un bâtiment.}
+
+\author{Pierre Haessig, Sylvain Chatel, Romain Bourdais}
+% add Amanda, Hervé
+\institute{
+    CentraleSupélec -- IETR
+    }
+\date{PyCon, Rennes, 16 octobre 2016}
+
+
+\begin{document}
+%------- page de titre --------
+  \begin{frame}
+
+  \titlepage
+
+  \color{gray} \small
+   \url{http://pierreh.eu}
+   \hfill
+   \texttt{pierre.haessig@centralesupelec.fr}
+
+  \end{frame}
+
+% --------- Sommaire ---------
+ \begin{frame}
+   \frametitle{Plan de la présentation}
+
+   \tableofcontents
+
+ \end{frame}
+% ----------------------------
+
+\section{Enjeux}
+
+\begin{frame}
+  \frametitle{Énergie thermique dans le bâtiment}
+
+  \begin{block}{Enjeu énergétique et environnemental}
+    Chauffer/refroidir un bâtiment consomme \emph{beaucoup} d'énergie. %TODO : bilan énergétique france
+  \end{block}
+
+
+
+  \bigskip
+
+  Pour réduire cette consommation, deux types de leviers:
+
+  \begin{itemize}
+    \item améliorer la \textbf{structure} (isolation, ...) du bâtiment\\
+    → ``\emph{hardware} upgrade''
+    \pause
+    \item améliorer la \textbf{commande} (pilotage) du chauffage/clim.\\
+    → ``\emph{software} upgrade''
+    \uncover{\color{bourgogne}[sujet du jour]}
+  \end{itemize}
+
+\end{frame}
+
+
+\section{Commande de chauffage classique}
+
+\begin{frame}
+  \frametitle{Choix du pas de temps}
+  
+  La performance des systèmes énergétiques dynamiques
+  \detail{(véhicule en mouvement, système de stockage d'énergie)},
+  est souvent évaluée par \textbf{simulation temporelle}.
+  
+  \bigskip
+  
+  → Le choix du pas de temps $\Delta_t$ relève d'un compromis :
+  %
+  \begin{itemize}
+    \item $\Delta_t$ court : simulation fidèle, mais lente (temps de calcul)
+    \item $\Delta_t$ long : simulation plus rapide, mais plus grossière
+  \end{itemize}
+
+\end{frame}
+
+\section{Commande prédictive}
+\subsection{les ingrédients}
+\subsection{sur un Rasberry Pi}
+
+\section{Conclusion}
+
+\subsection{Choix du pas de temps}
+
+
+\begin{frame}
+  \frametitle{Conclusion : choix du pas de temps}
+  \framesubtitle{sur notre exemple de système éolien-stockage}
+  
+  \begin{block}{}
+    Le pas de temps de 10 min (couramment choisi),
+    donne des résultats très proches de ceux obtenus avec un pas très fin.
+  \end{block}
+
+  \bigskip
+  
+  Résultat valable :
+  \begin{itemize}
+    \item pour la plupart des statistiques utiles au dimensionnement
+    (écarts RMS et MA).
+    \item y compris la durée de vie en cyclage (étonnamment ?)
+    \item cependant le micro cyclage est totalement masqué.
+  \end{itemize}
+
+\end{frame}
+
+\subsection{Généralisation et perspectives}
+
+
+\begin{frame}
+  \frametitle{Généralisation à d'autres systèmes}
+  
+  \begin{block}{}
+    La question de la généralisation reste ouverte.
+  \end{block}
+
+  \bigskip
+  → Applications où un stockage doit garantir une production EnR
+  sur des horizons plus longs (typiquement J+1), l'effet du pas de temps devrait
+  être encore plus faible.
+
+  \bigskip
+  → Par contre, un cas plus dépendant des fluctuations rapides
+  comme le ``lissage de rampe'' pourrait être plus sensible.
+  
+
+\end{frame}
+
+\begin{frame}
+  \frametitle{Perspective}
+  
+  Dans des applications :
+  
+  \begin{itemize}
+    \item qui dépendent des fluctuations haute fréquence,
+    \item mais où l'on n'a que des données basse fréquence,
+  \end{itemize}
+  
+  on pourrait essayer de \textbf{synthétiser un bruit haute fréquence} ?
+  
+  \begin{equation*}
+    P_{HF}^{synth} = P_{BF}^{data} + b_{HF}^{synth}
+  \end{equation*}
+  
+  \bigskip
+  \emph{→ question du réalisme statistique du résultat obtenu...}
+
+\end{frame}
+
+
+\end{document}

@@ -1,0 +1,80 @@
+%%% Beamber preamble - June 2015 %%%
+% FR version
+
+\documentclass[t]{beamer} % Top-aligned slides
+
+%% Font & language
+\usepackage[utf8x]{inputenc}
+\usepackage[frenchb]{babel}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+%\PrerenderUnicode{éàèê}
+
+%% Packages: math, symbols
+%\usepackage{gensymb} % for \celsius command
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{textcomp} % Symbole Euro €
+\newcommand{\euro}{\texteuro}
+%\usepackage{fixltx2e} % for \textsubscript command
+
+
+%% Beamer customization:
+\usetheme{Frankfurt}
+\usecolortheme{beaver} % red & gray colors
+% enlever l'ombre sous le titre: (http://tex.stackexchange.com/a/3182/51609)
+\setbeamertemplate{title page}[default][colsep=-4bp,rounded=true]
+% enlever l'ombre sous toutes les boîtes
+\setbeamertemplate{blocks}[rounded][shadow=false]
+
+%\setbeamertemplate{mini frames}{} % remove subsection circles
+
+% Puces :
+\setbeamertemplate{itemize items}{$\circ$}
+\setbeamertemplate{enumerate items}[default]
+\setbeamertemplate{section in toc}[sections numbered]
+\setbeamertemplate{subsection in toc}[square]
+
+% Frame number
+\setbeamertemplate{footline}[frame number]
+\setbeamertemplate{sidebar right}{} % (removes the navigation bar)
+
+
+
+
+%% Custom commands
+
+% Mathematical Expectation E[X] and Covariance
+\newcommand\E[1]{\mathbb{E}[#1]}
+\newcommand\avg[1]{\langle #1 \rangle} % ⟨X⟩ notation
+\DeclareMathOperator{\cov}{Cov}
+\DeclareMathOperator{\var}{Var}
+
+% Absolute value and norm (double bar)
+\providecommand{\abs}[1]{\lvert#1\rvert}
+\providecommand{\norm}[1]{\lVert#1\rVert}
+
+\newcommand\detail[1]{{\color{gray} \footnotesize #1}}
+
+
+%% Colors
+\usepackage{xcolor}
+% general purpose:
+\definecolor{green}{rgb}{0,0.5,0}
+\definecolor{bourgogne}{rgb}{0.76,0,0.40}
+\definecolor{turquoise}{rgb}{0,0.55,0.56}
+\definecolor{darkblue}{rgb}{0.2,0.4,0.7}
+% SDP colors
+\definecolor{present}{rgb}{1,0.4,0} % instant cost highlight
+\definecolor{future}{rgb}{0.2,0.2,0.7} % future cost highlight
+\definecolor{underbrace}{gray}{0.65}
+
+
+% Affiche en début de chaque section pas trop gros (\small),
+% les noms des sections, celle en cours en évidence,
+% les autres en grisé et les noms des sous-sections de la section en cours uniquement.
+\AtBeginSection[]{
+  \begin{frame}{Plan de la présentation}
+  \small \tableofcontents[currentsection, hideothersubsections]
+  \end{frame}
+}
