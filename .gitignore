@@ -7,3 +7,6 @@
 *.toc
 *.backup
 *.synctex.gz
+.ipynb_checkpoints
+*.pyc
+

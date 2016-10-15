@@ -42,10 +42,10 @@ order=-1
 
 [item:MPC_Python.tex]
 archive=true
-column=0
+column=26
 encoding=UTF-8
 highlight=LaTeX
-line=160
+line=239
 mode=LaTeX
 open=true
 order=0
@@ -61,10 +61,10 @@ open=true
 order=1
 
 [view-settings,view=0,item:MPC_Python.tex]
-CursorColumn=0
-CursorLine=160
+CursorColumn=26
+CursorLine=239
 JumpList=
-ViMarks=.,218,36,[,218,36,],218,45
+ViMarks=.,239,26,[,239,26,],239,26
 
 [view-settings,view=0,item:preamble.tex]
 CursorColumn=13

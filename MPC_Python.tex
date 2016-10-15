@@ -203,8 +203,15 @@ Application au pilotage optimal du chauffage d’un bâtiment.}
    \item calcul numérique avec des matrices : \textbf{numpy}
    \item solver d'optimisation linéaire : \textbf{cvxopt}\\
    (nb : interfaçage aux grands solvers commerciaux possible)
+   \item language de modélisation : \textbf{cvxpy}\\
+   {\footnotesize ``a Python-embedded \textbf{modeling language} for convex optimization''}
   \end{itemize}
 
+  \bigskip
+  \detail{
+  \url{http://cvxopt.org/},
+  \url{http://cvxpy.readthedocs.io}
+  }
 \end{frame}
 
 
@@ -217,13 +224,21 @@ Application au pilotage optimal du chauffage d’un bâtiment.}
     \includegraphics[width=0.9\textwidth]{notebook/sim_Prop_fback.pdf}
     
     \footnotesize
-     Simulation thermique sur une journée. Régulation classique ``proportionnelle''
+     Simulation thermique sur une journée \detail{(Text = 2°C)}.\\
+     Régulation classique ``proportionnelle''
   \end{center}
 \end{frame}
 
 \begin{frame}
   \frametitle{Commande de chauffage prédictive}
 
+  \begin{center}
+    \includegraphics[width=0.9\textwidth]{notebook/sim_linprog.pdf}
+    
+    \footnotesize
+     Simulation thermique sur une journée \detail{(Text = 2°C)}.\\
+     Optimisation par prog. linéaire ``boucle ouverte'' des 240 pas de temps.
+  \end{center}
 \end{frame}
 
 
