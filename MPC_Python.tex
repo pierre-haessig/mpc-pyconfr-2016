@@ -3,12 +3,12 @@
 \title{Commande prédictive avec Python.\\
 Application au pilotage optimal du chauffage d’un bâtiment.}
 
-\author{Pierre Haessig, Sylvain Chatel, Romain Bourdais}
-% add Amanda, Hervé
+\author{Pierre Haessig, Sylvain Chatel, Romain Bourdais, Amanda Abreu, Hervé Guéguen}
+
 \institute{
     CentraleSupélec -- IETR
     }
-\date{PyCon, Rennes, 16 octobre 2016}
+\date{PyCon-FR, Rennes, 16 octobre 2016}
 
 
 \begin{document}
@@ -33,16 +33,14 @@ Application au pilotage optimal du chauffage d’un bâtiment.}
  \end{frame}
 % ----------------------------
 
-\section{Enjeux}
+\section{Contexte et Enjeux}
 
-\begin{frame}
+\begin{frame}[c]
   \frametitle{Énergie thermique dans le bâtiment}
 
   \begin{block}{Enjeu énergétique et environnemental}
     Chauffer/refroidir un bâtiment consomme \emph{beaucoup} d'énergie. %TODO : bilan énergétique france
   \end{block}
-
-
 
   \bigskip
 
@@ -50,107 +48,223 @@ Application au pilotage optimal du chauffage d’un bâtiment.}
 
   \begin{itemize}
     \item améliorer la \textbf{structure} (isolation, ...) du bâtiment\\
-    → ``\emph{hardware} upgrade''
+    → \emph{``hardware upgrade''}
     \pause
     \item améliorer la \textbf{commande} (pilotage) du chauffage/clim.\\
-    → ``\emph{software} upgrade''
+    → \emph{``software upgrade''}
     \uncover{\color{bourgogne}[sujet du jour]}
   \end{itemize}
 
 \end{frame}
 
+\begin{frame}[c]
+  \frametitle{Maison \& bâtiment connectés}
+  Les bâtiments n'échappent pas à la vague d'équipement en moyens de calcul
+  et de communication numérique :
+  
+  \begin{itemize}
+   \item solutions clé en main fermées : Nest (filiale Google),
+   industriels historiques de la domotique… \pause
+   \item envie de solutions ouvertes : ``domotique libre''
+   
+    \begin{itemize}
+      \item bcp de solutions d'interfaçage (hardware \& software)
+      \item bcp de solutions de logging, affichage, monitoring \pause
+      \item \color{bourgogne}\emph{peu de solutions de pilotage (?)} \textcolor{gray}{(*)}
+    \end{itemize}
+  \end{itemize}
+  
+  \detail{(*) je ne parle pas du pilotage par site web/appli smartphone → interfaçage}
+  
+\end{frame}
 
-\section{Commande de chauffage classique}
+
+\section{Commande de chauffage : du classique au prédictif}
 
 \begin{frame}
-  \frametitle{Choix du pas de temps}
+  \frametitle{Commande : du classique au prédictif}
   
-  La performance des systèmes énergétiques dynamiques
-  \detail{(véhicule en mouvement, système de stockage d'énergie)},
-  est souvent évaluée par \textbf{simulation temporelle}.
+  \begin{center}
+  \only<1>{%
+    \includegraphics[width=\textwidth]{figures/MPC_sys.pdf}
+    
+    Au commencement: un système à piloter/commander
+    }
+  \only<2>{%
+    \includegraphics[width=\textwidth]{figures/MPC_man.pdf}
+    
+    On peut piloter le système à la main...\\
+    
+    }
+  \only<3>{%
+    \includegraphics[width=\textwidth]{figures/MPC_fback.pdf}
+    
+    On peut piloter le système à la main...\\
+    (on s'aide généralement de la mesure \\ → ``rétroaction'', ``boucle fermée'')
+    }
+  \only<4>{%
+    \includegraphics[width=\textwidth]{figures/MPC_classic.pdf}
+    
+    Commande automatique : génération de la commande\\
+    pour suivre une \textbf{consigne}
+    \detail{(PID: \textasciitilde 1930)}
+    }
+  \only<5->{%
+    \includegraphics[width=\textwidth]{figures/MPC.pdf}
+    
+    Commande prédictive (\textasciitilde 1970) : le simple ``suivi de la consigne''\\ est remplacé
+    par un \textbf{objectif à optimiser}\\ \detail{(à minimiser ou maximiser, selon l'objectif)}
+    }
+  \end{center}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Commande prédictive : les ingrédients}
   
-  \bigskip
-  
-  → Le choix du pas de temps $\Delta_t$ relève d'un compromis :
-  %
+  Le ``Model Predictive Control'' (MPC) se base sûr :
   \begin{itemize}
-    \item $\Delta_t$ court : simulation fidèle, mais lente (temps de calcul)
-    \item $\Delta_t$ long : simulation plus rapide, mais plus grossière
+   \item \textbf{Objectif} (critère mathématique) à optimiser : \\
+   coût économique, consommation, ...\\
+   ou, plus classiquement, écart quadratique à une consigne,
+   \item \textbf{Modèle de la dynamique} du système : influences des entrées commandées et extérieures (perturbations)
+   \item \textbf{Prévisions} sur un horizon des consignes et perturbations futures
+  \end{itemize}
+  
+  \bigskip \pause
+  → Travail de conception plus élevé qu'avec une ``régulation classique''
+ \emph{ (mais ça vaut le coup : très déployé industriellement)}.
+
+\end{frame}
+
+\begin{frame}
+  \frametitle{Commande prédictive : besoin en calcul}
+  
+  Utilisation \emph{en ligne} d'un algorithme d'optimisation :
+  
+  \begin{block}{Optimisation ``en boucle fermée''}
+  \begin{itemize}
+   \item à chaque pas, calcul d’une \emph{séquence optimale} : \\
+   commandes pour l’instant présent et les instants futurs
+   \item seule la commande présente est effectivement appliquée
+   \item au pas suivant, reprise du calcul sur l’horizon décalé \\(→ « horizon glissant »)
+  \end{itemize}
+  \end{block}
+  
+  \bigskip \pause
+  → Nécessité d'embarquer de la \textbf{puissance de calcul}\\ \pause
+  \detail{(mais on est en 2016)}
+  
+  \begin{center}
+    \includegraphics[width=0.25\textwidth]{figures/RPi_2013_02.jpg}
+  \end{center}
+
+\end{frame}
+
+\begin{frame}
+  \frametitle{Commande prédictive : mise en œuvre}
+  
+  Pour que l'optimisation \emph{en ligne} soit :
+  \begin{itemize}
+   \item fiable (pas de problème de convergence)
+   \item soluble en un temps raisonnable (complexité polynomiale)
+  \end{itemize}
+  elle souvent formulée de façon \textbf{linéaire/quadratique}.
+  
+  \detail{(ça tombe bien : ``Coût = $\sum_k$ Prix$_k$ × \textbf{Puissance}$_k$ $\Delta_t$'' est linéaire)}
+  
+  \bigskip \pause
+  → utilisation solvers de ``programmes linéaires/quadratiques'' :
+  
+  \begin{itemize}
+   \item commerciaux : CPLEX (IBM), Gurobi
+   \item libres : 
+   \begin{itemize}
+    \item GLPK (GNU) : programmes mixtes entiers linéaires ``MILP''
+    \item ECOS (embotech) : dédié aux systèmes embarqués
+    \item \textcolor{turquoise}{cvxopt : interface naturelle en Python} \\ { \footnotesize (Andersen, Dahl and Vandenberghe)}
+   \end{itemize}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Commande prédictive : en Python}
+  
+  NB : la R\&D en commande se fait souvent sous Matlab/Simulink :
+  \begin{itemize}
+   \item environnement puissant, riche en fonctionnalités \\(e.g. automatique et traitement du signal)
+   \item mais commercial \detail{(et sémantique du language bof bof)}
+  \end{itemize}
+
+  \bigskip \pause
+  
+  Mais on peut s'en sortir en Python :
+  
+  \begin{itemize}
+   \item calcul numérique avec des matrices : \textbf{numpy}
+   \item solver d'optimisation linéaire : \textbf{cvxopt}\\
+   (nb : interfaçage aux grands solvers commerciaux possible)
   \end{itemize}
 
 \end{frame}
 
-\section{Commande prédictive}
-\subsection{les ingrédients}
-\subsection{sur un Rasberry Pi}
+
+\section{Commande de chauffage en Python}
+
+\begin{frame}
+  \frametitle{Commande de chauffage classique}
+
+\end{frame}
+
+\begin{frame}
+  \frametitle{Commande de chauffage prédictive}
+
+\end{frame}
+
 
 \section{Conclusion}
 
-\subsection{Choix du pas de temps}
 
 
-\begin{frame}
-  \frametitle{Conclusion : choix du pas de temps}
-  \framesubtitle{sur notre exemple de système éolien-stockage}
+\begin{frame}[c]
+  \frametitle{Conclusion}
   
+  \begin{block}{La commande prédictive :}
+  \begin{itemize}
+   \item permet d'optimiser le pilotage d'un système\\ (e.g. économie de chauffage dans un bâtiment)
+   \item peut se mettre en œuvre en Python \\(le gros du travail est dans un solver d'optimisation)
+   \item peut se mettre en œuvre en Python avec des logiciels libres
+  \end{itemize}
+  \end{block}
+  
+  \pause
   \begin{block}{}
-    Le pas de temps de 10 min (couramment choisi),
-    donne des résultats très proches de ceux obtenus avec un pas très fin.
+   → Vers de la domotique \emph{de commande} libre ?
   \end{block}
 
-  \bigskip
-  
-  Résultat valable :
-  \begin{itemize}
-    \item pour la plupart des statistiques utiles au dimensionnement
-    (écarts RMS et MA).
-    \item y compris la durée de vie en cyclage (étonnamment ?)
-    \item cependant le micro cyclage est totalement masqué.
-  \end{itemize}
 
+  
 \end{frame}
 
-\subsection{Généralisation et perspectives}
-
-
-\begin{frame}
-  \frametitle{Généralisation à d'autres systèmes}
+\begin{frame}[c]
+  \frametitle{Perspectives}
   
-  \begin{block}{}
-    La question de la généralisation reste ouverte.
-  \end{block}
+  Tester sur des Raspberry Pi\\ (→ travaux à Ulm Univ., mais code source non trouvé)
+  
+  \detail{
+  (Hentzelt, Klingler, and Graichen,
+  “Experimental Results for Distributed Model Predictive Control Applied to a Water Distribution System.”, 2014)}
 
   \bigskip
-  → Applications où un stockage doit garantir une production EnR
-  sur des horizons plus longs (typiquement J+1), l'effet du pas de temps devrait
-  être encore plus faible.
-
-  \bigskip
-  → Par contre, un cas plus dépendant des fluctuations rapides
-  comme le ``lissage de rampe'' pourrait être plus sensible.
   
-
-\end{frame}
-
-\begin{frame}
-  \frametitle{Perspective}
-  
-  Dans des applications :
+  Pour faciliter le travail :
+  package \texttt{dmpc} \detail{(P. Haessig \& S.Chatel, 2016)}
   
   \begin{itemize}
-    \item qui dépendent des fluctuations haute fréquence,
-    \item mais où l'on n'a que des données basse fréquence,
+   \item license BSD-3
+   \item version alpha, mais déjà \texttt{pip install}-able depuis le dépot
+   \item \url{https://github.com/pierre-haessig/python-dmpc}
   \end{itemize}
   
-  on pourrait essayer de \textbf{synthétiser un bruit haute fréquence} ?
-  
-  \begin{equation*}
-    P_{HF}^{synth} = P_{BF}^{data} + b_{HF}^{synth}
-  \end{equation*}
-  
-  \bigskip
-  \emph{→ question du réalisme statistique du résultat obtenu...}
-
 \end{frame}
 
 
