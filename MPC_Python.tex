@@ -3,7 +3,7 @@
 \title{Commande prédictive avec Python.\\
 Application au pilotage optimal du chauffage d’un bâtiment.}
 
-\author{Pierre Haessig, Sylvain Chatel, Romain Bourdais, Amanda Abreu, Hervé Guéguen}
+\author{Pierre Haessig, Sylvain Chatel, \\Romain Bourdais, Amanda Abreu, Hervé Guéguen}
 
 \institute{
     CentraleSupélec -- IETR
@@ -168,12 +168,12 @@ Application au pilotage optimal du chauffage d’un bâtiment.}
    \item fiable (pas de problème de convergence)
    \item soluble en un temps raisonnable (complexité polynomiale)
   \end{itemize}
-  elle souvent formulée de façon \textbf{linéaire/quadratique}.
+  elle est souvent formulée de façon \textbf{linéaire/quadratique}.
   
   \detail{(ça tombe bien : ``Coût = $\sum_k$ Prix$_k$ × \textbf{Puissance}$_k$ $\Delta_t$'' est linéaire)}
   
   \bigskip \pause
-  → utilisation solvers de ``programmes linéaires/quadratiques'' :
+  → utilisation de solvers de ``programmes linéaires/quadratiques'' :
   
   \begin{itemize}
    \item commerciaux : CPLEX (IBM), Gurobi
@@ -192,7 +192,7 @@ Application au pilotage optimal du chauffage d’un bâtiment.}
   NB : la R\&D en commande se fait souvent sous Matlab/Simulink :
   \begin{itemize}
    \item environnement puissant, riche en fonctionnalités \\(e.g. automatique et traitement du signal)
-   \item mais commercial \detail{(et sémantique du language bof bof)}
+   \item mais commercial \detail{(et sémantique du langage bof bof)}
   \end{itemize}
 
   \bigskip \pause
@@ -203,7 +203,7 @@ Application au pilotage optimal du chauffage d’un bâtiment.}
    \item calcul numérique avec des matrices : \textbf{numpy}
    \item solver d'optimisation linéaire : \textbf{cvxopt}\\
    (nb : interfaçage aux grands solvers commerciaux possible)
-   \item language de modélisation : \textbf{cvxpy}\\
+   \item langage de modélisation : \textbf{cvxpy}\\
    {\footnotesize ``a Python-embedded \textbf{modeling language} for convex optimization''}
   \end{itemize}
 
@@ -245,7 +245,6 @@ Application au pilotage optimal du chauffage d’un bâtiment.}
 \section{Conclusion}
 
 
-
 \begin{frame}[c]
   \frametitle{Conclusion}
   
@@ -262,9 +261,8 @@ Application au pilotage optimal du chauffage d’un bâtiment.}
    → Vers de la domotique \emph{de commande} libre ?
   \end{block}
 
-
-  
 \end{frame}
+
 
 \begin{frame}[c]
   \frametitle{Perspectives}
@@ -282,7 +280,7 @@ Application au pilotage optimal du chauffage d’un bâtiment.}
   
   \begin{itemize}
    \item license BSD-3
-   \item version alpha, mais déjà \texttt{pip install}-able depuis le dépot
+   \item version alpha, mais déjà \texttt{pip install}-able depuis le dépôt
    \item \url{https://github.com/pierre-haessig/python-dmpc}
   \end{itemize}
   
